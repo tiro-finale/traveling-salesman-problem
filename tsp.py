@@ -10,16 +10,13 @@ from itertools import permutations
 import numpy as np
 from matplotlib import pyplot as plt
 
-def tsp(x, y):
-
-    # ルートを作成する．
-    pos = (p for p in zip(x, y))
+def tsp(pos):
 
     # [0]: 最短距離のルート
     # [1]: その最短距離
     dists = []
     # ルートの距離を計算する．
-    for route in permutations(pos, n):
+    for route in permutations(pos, len(pos)):
         s = 0.0
         for i in range(1, n):
             p1, p2 = route[i-1], route[i]
@@ -27,11 +24,7 @@ def tsp(x, y):
             dy = abs(p2[1] - p1[1])
             s += sqrt(dx**2 + dy**2)
 
-        # 最初に代入を行う．
-        if not dists:
-            dists = [route, s]
-        # 最短距離を更新する．
-        elif s < dists[1]:
+        if not dists or s < dists[1]:
             dists = [route, s]
 
     return dists
@@ -42,12 +35,13 @@ if __name__ == "__main__":
     # 座標作成
     seed(100)
     n = 9
-    x = [randint(0, 99) for _ in range(n)]
-    y = [randint(0, 99) for _ in range(n)]
+    xmin, xmax = 0, 99
+    ymin, ymax = 0, 99
+    pos = [(randint(xmin, xmax), randint(ymin, ymax)) for _ in range(n)]
 
     # 巡回セールスマン問題(時間計測有り)
     start_time = time()
-    min_route, dist = tsp(x, y)
+    min_route, dist = tsp(pos)
     dtime = time() - start_time
 
     # 最短距離をプロットする．
