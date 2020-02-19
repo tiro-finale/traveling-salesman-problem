@@ -10,7 +10,7 @@ from itertools import permutations
 import numpy as np
 from matplotlib import pyplot as plt
 
-def tsp(pos):
+def tsp(pos, ismax=False):
 
     # [0]: 最短距離のルート
     # [1]: その最短距離
@@ -24,7 +24,7 @@ def tsp(pos):
             dy = abs(p2[1] - p1[1])
             s += sqrt(dx**2 + dy**2)
 
-        if not dists or s < dists[1]:
+        if not dists or (not ismax and s < dists[1]) or (ismax and s > dists[1]):
             dists = [route, s]
 
     return dists
@@ -51,8 +51,7 @@ if __name__ == "__main__":
         p1, p2 = min_route[i-1], min_route[i]
         ax.plot(*p1, marker="$%d$"%i, markersize=16, color="red")
         ax.plot(*p2, marker="$%d$"%(i+1), markersize=16, color="red")
-        arrowprops = dict(arrowstyle="->", connectionstyle="arc3", facecolor="red", edgecolor="black")
-        ax.annotate("", xy=p2, xytext=p1, arrowprops=arrowprops)
+        ax.annotate("", xy=p2, xytext=p1, arrowprops={"arrowstyle": "->"})
     plt.title("TSP (time: %.3f[sec], min: %.3f)" % (dtime, dist))
     plt.show()
 
