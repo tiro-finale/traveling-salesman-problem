@@ -4,17 +4,15 @@
 from time import time
 from math import sqrt
 from pprint import pprint
-from random import randint
+from random import seed, randint
 from itertools import permutations
 
 import numpy as np
 from matplotlib import pyplot as plt
 
-def tsp(n, disp=True):
+def tsp(x, y):
 
-    # 座標及びルートを作成する．
-    x = [randint(0, 99) for _ in range(n)]
-    y = [randint(0, 99) for _ in range(n)]
+    # ルートを作成する．
     pos = (p for p in zip(x, y))
     routes = list(permutations(pos, n))
 
@@ -30,30 +28,32 @@ def tsp(n, disp=True):
             s += sqrt(dx**2 + dy**2)
         dists[route] = s
 
-    # 最短/最長距離のルートを取得する．
-    min_route = min(dists, key=dists.get)
-    max_route = max(dists, key=dists.get)
+    # 最短距離のルートを取得する．
+    return min(dists, key=dists.get)
 
-    #pprint(dists)
-    #pprint(min_route)
 
-    if not disp:
-        return
+if __name__ == "__main__":
 
+    # 座標作成
+    seed(100)
+    n = 9
+    x = [randint(0, 99) for _ in range(n)]
+    y = [randint(0, 99) for _ in range(n)]
+
+    # 巡回セールスマン問題
+    min_route = tsp(x, y)
+
+    # 最短距離をプロットする．
     fig = plt.figure()
     ax = fig.add_subplot(111)
     for i in range(1, n):
         p1, p2 = min_route[i-1], min_route[i]
-        ax.plot(*p1, "o", color="red")
-        ax.plot(*p2, "o", color="red")
+        ax.plot(*p1, marker="$%d$"%i, markersize=16, color="red")
+        ax.plot(*p2, marker="$%d$"%(i+1), markersize=16, color="red")
         arrowprops = dict(arrowstyle="->", connectionstyle="arc3", facecolor="red", edgecolor="black")
         ax.annotate("", xy=p2, xytext=p1, arrowprops=arrowprops)
-    ax.set_xlim([min(x), max(x)])
-    ax.set_ylim([min(y), max(y)])
+    ax.set_xlim([min(x)-10, max(x)+10])
+    ax.set_ylim([min(y)-10, max(y)+10])
     plt.title("TSP")
     plt.show()
 
-
-
-if __name__ == "__main__":
-    tsp(6)
