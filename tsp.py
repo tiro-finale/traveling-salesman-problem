@@ -14,22 +14,27 @@ def tsp(x, y):
 
     # ルートを作成する．
     pos = (p for p in zip(x, y))
-    routes = list(permutations(pos, n))
 
-    # ルートをキー，その移動距離をバリューとする．
-    dists = {}
+    # [0]: 最短距離のルート
+    # [1]: その最短距離
+    dists = []
     # ルートの距離を計算する．
-    for route in routes:
+    for route in permutations(pos, n):
         s = 0.0
         for i in range(1, n):
             p1, p2 = route[i-1], route[i]
             dx = abs(p2[0] - p1[0])
             dy = abs(p2[1] - p1[1])
             s += sqrt(dx**2 + dy**2)
-        dists[route] = s
 
-    # 最短距離のルートを取得する．
-    return min(dists, key=dists.get)
+        # 最初に代入を行う．
+        if not dists:
+            dists = [route, s]
+        # 最短距離を更新する．
+        elif s < dists[1]:
+            dists = [route, s]
+
+    return dists
 
 
 if __name__ == "__main__":
@@ -40,8 +45,10 @@ if __name__ == "__main__":
     x = [randint(0, 99) for _ in range(n)]
     y = [randint(0, 99) for _ in range(n)]
 
-    # 巡回セールスマン問題
-    min_route = tsp(x, y)
+    # 巡回セールスマン問題(時間計測有り)
+    start_time = time()
+    min_route, dist = tsp(x, y)
+    dtime = time() - start_time
 
     # 最短距離をプロットする．
     fig = plt.figure()
@@ -52,8 +59,6 @@ if __name__ == "__main__":
         ax.plot(*p2, marker="$%d$"%(i+1), markersize=16, color="red")
         arrowprops = dict(arrowstyle="->", connectionstyle="arc3", facecolor="red", edgecolor="black")
         ax.annotate("", xy=p2, xytext=p1, arrowprops=arrowprops)
-    ax.set_xlim([min(x)-10, max(x)+10])
-    ax.set_ylim([min(y)-10, max(y)+10])
-    plt.title("TSP")
+    plt.title("TSP (time: %.3f[sec], min: %.3f)" % (dtime, dist))
     plt.show()
 
