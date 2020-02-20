@@ -18,8 +18,8 @@ def tsp(pos, ismax=False):
     # ルートの距離を計算する．
     for route in permutations(pos, len(pos)):
         s = 0.0
-        for i in range(1, n):
-            p1, p2 = route[i-1], route[i]
+        for i in range(n):
+            p1, p2 = route[i%n], route[(i+1)%n]
             dx = abs(p2[0] - p1[0])
             dy = abs(p2[1] - p1[1])
             s += sqrt(dx**2 + dy**2)
@@ -47,8 +47,8 @@ if __name__ == "__main__":
     # 最短距離をプロットする．
     fig = plt.figure()
     ax = fig.add_subplot(111)
-    for i in range(1, n):
-        p1, p2 = min_route[i-1], min_route[i]
+    for i in range(n):
+        p1, p2 = min_route[i%n], min_route[(i+1)%n]
         ax.plot(*p1, marker="$%d$"%i, markersize=16, color="red")
         ax.plot(*p2, marker="$%d$"%(i+1), markersize=16, color="red")
         ax.annotate("", xy=p2, xytext=p1, arrowprops={"arrowstyle": "->"})
