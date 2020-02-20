@@ -49,8 +49,8 @@ if __name__ == "__main__":
     ax = fig.add_subplot(111)
     for i in range(n):
         p1, p2 = min_route[i%n], min_route[(i+1)%n]
-        ax.plot(*p1, marker="$%d$"%i, markersize=16, color="red")
-        ax.plot(*p2, marker="$%d$"%(i+1), markersize=16, color="red")
+        ax.plot(*p1, marker="$%d$"%(i+1), markersize=16, color="red")
+        ax.plot(*p2, markersize=16, color="red")
         ax.annotate("", xy=p2, xytext=p1, arrowprops={"arrowstyle": "->"})
     plt.title("TSP (time: %.3f[sec], min: %.3f)" % (dtime, dist))
     plt.show()
